@@ -6,29 +6,120 @@ import os
 from pprint import pprint
 
 
+# Don't touch this
 baseUrl = 'https://api.github.com/'
 headers1 = {'Accept': 'application/vnd.github.v3+json'}
 headers2 = {'Accept': 'application/vnd.github.baptiste-preview+json'}
 headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 
+
+# Set these variables to true or false, or comment them out for prompting
+#create_project   = False
+#create_repo      = False
+#create_readme    = False
+#create_gitignore = False
+#create_columns   = False
+#create_hook      = False
+#hook_active      = False
+
+
+## this is the repository that is going to be created
 user = 'costateixeira'
 token = ''  # Add your secret token here
-auth = HTTPBasicAuth(user, token)
 email = 'hl7belgium@gmail.com'
-hook_active = False
-
 owner = 'costateixeira'
-repo = 'test4'
-ownerType = 'org'
-template_owner = 'hl7-be'
-template_repo = 'empty-ig'
+repo = ''
+#ownerType = ''
 
-create_project   = False
-create_repo      = False
-create_readme    = False
-create_gitignore = False
-create_hook      = True
-create_columns   = False
+## this is the template repository that is going to be cloned
+template_owner = 'openhie'
+template_repo = 'fhir-ig-empty'
+
+
+
+if (user==''):
+  user = input("Username (to login): ")   
+print("username: "+owner+"\n")
+
+if (token==''):
+  token = input("Token or password is empty. Add your password or token: ")   
+auth = HTTPBasicAuth(user, token)
+
+# TO DO: Try auth to see if OK. Exit if not
+
+if (email==''):
+  email = input("email of repository owner: ")   
+print("Owner email: "+owner+"\n")
+
+if (owner==''):
+  owner = input("Repository owner (github handle to create repository): ")   
+print("Repository owner: "+owner+"\n")
+# TO DO: Check if handle exists?? exit if not
+
+
+if (repo==''):
+  repo = input("Repository name: ")   
+# TO DO: Check if repo exists?? and set createRepo accordingly
+print("Repository: "+repo+"\n")
+
+
+if (template_owner==''):
+  template_owner = input("Template repository owner: ")   
+print("Using template owner: "+template_owner+"\n")
+
+
+if (template_repo==''):
+  template_repo = input("Template repository name: ")   
+print("Using template repository: "+template_repo+"\n")
+
+# TO DO: Check if repo exists?? abort if not
+
+
+
+try:
+  print("Create project: "+str(create_project)+"\n")
+except:
+  create_project = (input("Create Project? (Y/N): ").upper() == 'Y')
+  print("Create project: "+str(create_project)+"\n")
+
+try:
+  print("Create repository: "+str(create_repo)+"\n")
+except:
+  create_repo = (input("Create repository? (Y/N): ").upper() == 'Y')
+  print("Create repository: "+str(create_repo)+"\n")
+
+try:
+  print("Create/Update README.md: "+str(create_readme)+"\n")
+except:
+  create_readme = (input("Create/Update README.md? (Y/N): ").upper() == 'Y')
+  print("Create/Update README.md: "+str(create_readme)+"\n")
+
+try:
+  print("Create/update standard .gitignore: "+str(create_gitignore)+"\n")
+except:
+  create_gitignore = (input("Create Project? (Y/N): ").upper() == 'Y')
+  print("Create/update standard .gitignore: "+str(create_gitignore)+"\n")
+
+
+try:
+  print("Create kanban columns: "+str(create_columns)+"\n")
+except:
+  create_columns = (input("Create kanban columns? (Y/N): ").upper() == 'Y')
+  print("Create kanban columns: "+str(create_columns)+"\n")
+
+
+try:
+  print("Create CI Build hook: "+str(create_hook)+"\n")
+except:
+  create_hook = (input("Create CI Build hook? (Y/N): ").upper() == 'Y')
+  print("Create CI Build hook: "+str(create_hook)+"\n")
+
+try:
+  print("Activate CI Build hook: "+str(hook_active)+"\n")
+except:
+  hook_active = (input("Activate CI Build hook? (Y/N): ").upper() == 'Y')
+  print("Activate CI Build hook: "+str(hook_active)+"\n")
+
 
 
 url = baseUrl+'users/'+owner
@@ -43,6 +134,7 @@ else:
     print('ORG')
   else:
     print('ERROR')
+    exit(1)
 
 
 ########### POST repo
@@ -58,26 +150,6 @@ if create_repo:
 
 create_file_url = baseUrl+'repos/'+owner+'/'+repo+'/contents/'
 
-################################################################# CREATE README ####################################################################
-########### GET README.md sha
-r = requests.get(create_file_url+'README.md', headers=headers1, auth=auth)
-readme_sha=''
-if (r.status_code == 200):
-    response=r.json()
-    if ("sha" in response):
-        readme_sha = response['sha']
-        print("README.md exists")
-
-########### POST README
-if create_readme:
-    readme = "Empty IG\n---\nThis is an empty IG\n<br> </br>\n###\n### Publication\nThis ImplementationGuide is published in the following locations:\n\nContinuous Build: __http://build.fhir.org/ig/"+owner+"/"+repo+"/branches/main/index.html__  \nCanonical / permanent URL: \n<br> </br>\n\n### Issues\nIssues and change requests are managed here:  \n\nIssues:  __https://github.com/"+owner+"/"+repo+"/issues__  \nKanban board:  __https://github.com/"""+owner+"/"+repo+"/projects/"+projectId+"__  \n\n"
-    readme_enc = base64.b64encode(readme.encode('utf-8'))
-    create_readme_body = {'message': "create readme", 'committer': {'name': owner,'email': email}, "sha": readme_sha, "content": readme_enc.decode('utf-8')}
-    r = requests.put(create_file_url+"README.md", data=json.dumps(create_readme_body), headers=headers1, auth=auth)
-    if (r.status_code == 200):
-        response=r.json()
-        print('README.md Created')
-
 
 ################################################################# CREATE .gitignore ####################################################################
 r = requests.get(create_file_url+'.gitignore', headers=headers1, auth=auth)
@@ -90,7 +162,7 @@ if (r.status_code == 200):
 
 ########### POST .gitignore
 if create_gitignore:
-    gitignore = "Empty IG\n---\nThis is an empty IG\n<br> </br>\n###\n### Publication\nThis ImplementationGuide is published in the following locations:\n\nContinuous Build: __http://build.fhir.org/ig/"+owner+"/"+repo+"/branches/main/index.html__  \nCanonical / permanent URL: \n<br> </br>\n\n### Issues\nIssues and change requests are managed here:  \n\nIssues:  __https://github.com/"+owner+"/"+repo+"/issues__  \nKanban board:  __https://github.com/"""+owner+"/"+repo+"/projects/"+projectId+"__  \n\n"
+    gitignore = "# Temporary folders #\n#####################\ntemp\ntemplate\noutput\nfsh-generated\n\n# Don't commit this because it's so large #\n###########################################\n/input-cache/publisher.jar\n\n# Windows generated files #\n###########################\nThumbs.db\n\n# OS generated files #\n######################\n.DS_Store\n.DS_Store?\n\n# backup files #\n################\n*.bak"
     gitignore = base64.b64encode(gitignore.encode('utf-8'))
     create_gitignore_body = {'message': "create gitignore", 'committer': {'name': owner,'email': email}, "sha": gitignore_sha, "content": "IyBUZW1wb3JhcnkgZm9sZGVycyAjCiMjIyMjIyMjIyMjIyMjIyMjIyMjIwp0ZW1wCnRlbXBsYXRlCm91dHB1dApmc2gtZ2VuZXJhdGVkLwoKIyBEb24ndCBjb21taXQgdGhpcyBiZWNhdXNlIGl0J3Mgc28gbGFyZ2UgIwojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjCi9pbnB1dC1jYWNoZS9vcmcuaGw3LmZoaXIucHVibGlzaGVyLmphcgovaW5wdXQtY2FjaGUvcHVibGlzaGVyLmphcgoKIyBXaW5kb3dzIGdlbmVyYXRlZCBmaWxlcyAjCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwpUaHVtYnMuZGIKCiMgT1MgZ2VuZXJhdGVkIGZpbGVzICMKIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwouRFNfU3RvcmUKLkRTX1N0b3JlPwoKIyBiYWNrdXAgZmlsZXMgIwojIyMjIyMjIyMjIyMjIyMjCiouYmFr"}
     r = requests.put(create_file_url+".gitignore", data=json.dumps(create_gitignore_body), headers=headers1, auth=auth)
@@ -129,6 +201,29 @@ if create_project:
 
 columns= {'inbox':{'name':'Inbox', 'id':''},'todo':{'name':'To Do', 'id':''},'wip':{'name':'In Progress', 'id':''},'done':{'name':'Done', 'id':''}}
 columnList= ['inbox','todo','wip','done']
+
+readme = ''
+################################################################# CREATE README ####################################################################
+########### GET README.md sha
+r = requests.get(create_file_url+'README.md', headers=headers1, auth=auth)
+readme_sha=''
+if (r.status_code == 200):
+    response=r.json()
+    if ("sha" in response):
+        readme_sha = response['sha']
+        print("README.md exists")
+
+########### POST README
+if create_readme:
+    readme = "Empty IG\n---\nThis is an empty IG\n<br> </br>\n###\n### Publication\nThis ImplementationGuide is published in the following locations:\n\nContinuous Build: __http://build.fhir.org/ig/"+owner+"/"+repo+"/branches/main/index.html__  \nCanonical / permanent URL: \n<br> </br>\n\n### Issues\nIssues and change requests are managed here:  \n\nIssues:  __https://github.com/"+owner+"/"+repo+"/issues__  \nKanban board:  __https://github.com/"""+owner+"/"+repo+"/projects/"+str(projectId)+"__  \n\n"
+    readme_enc = base64.b64encode(readme.encode('utf-8'))
+    create_readme_body = {'message': "create readme", 'committer': {'name': owner,'email': email}, "sha": readme_sha, "content": readme_enc.decode('utf-8')}
+    r = requests.put(create_file_url+"README.md", data=json.dumps(create_readme_body), headers=headers1, auth=auth)
+    if (r.status_code == 200):
+        response=r.json()
+        print('README.md Created')
+
+
 
 ################################################################# CREATE Project columns ####################################################################
 if create_columns:
