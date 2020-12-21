@@ -24,16 +24,16 @@ headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 
 
 ## this is the repository that is going to be created
-user = 'costateixeira'
+user = ''
 token = ''  # Add your secret token here
 email = 'hl7belgium@gmail.com'
-owner = 'costateixeira'
+owner = ''
 repo = ''
 #ownerType = ''
 
 ## this is the template repository that is going to be cloned
 template_owner = 'openhie'
-template_repo = 'fhir-ig-empty'
+template_repo = 'fhir-ig-empty22'
 
 
 
@@ -57,10 +57,32 @@ print("Repository owner: "+owner+"\n")
 # TO DO: Check if handle exists?? exit if not
 
 
+url = baseUrl+'users/'+owner
+r = requests.get(url, headers=headers1)
+if (r.status_code == 200):
+    data = r.json()
+    ownerType=data['type']
+if (ownerType=='User'):
+    print('Owner is an user')
+else:
+  if (ownerType=='Organization'):
+    print('Owner is an organization')
+  else:
+    print('ERROR - owner not found or not accessible. Exiting...\n')
+    exit(1)
+
+
+
 if (repo==''):
   repo = input("Repository name: ")   
-# TO DO: Check if repo exists?? and set createRepo accordingly
-print("Repository: "+repo+"\n")
+
+# Check if repo exists?? and set createRepo accordingly
+r = requests.get(baseUrl+'repos/'+owner+'/'+repo, headers=headers2, auth=auth)
+if (r.status_code == 200):
+  print("Repository exits: "+owner+"/"+repo+"\n")
+else:
+  print("Repository will be created: "+owner+"/"+repo+"\n")
+
 
 
 if (template_owner==''):
@@ -72,7 +94,15 @@ if (template_repo==''):
   template_repo = input("Template repository name: ")   
 print("Using template repository: "+template_repo+"\n")
 
-# TO DO: Check if repo exists?? abort if not
+r = requests.get(baseUrl+'repos/'+template_owner+'/'+template_repo, headers=headers2, auth=auth)
+# TO DO: Check if template repo exists? abort if not
+if (r.status_code == 200):
+  print("Template exists: "+template_owner+"/"+template_repo+"\n")
+else:
+  print("Template does not exist: "+template_owner+"/"+template_repo+"\n. Exiting...\n")
+  exit(1)
+
+exit(0)
 
 
 
@@ -120,21 +150,6 @@ except:
   hook_active = (input("Activate CI Build hook? (Y/N): ").upper() == 'Y')
   print("Activate CI Build hook: "+str(hook_active)+"\n")
 
-
-
-url = baseUrl+'users/'+owner
-r = requests.get(url, headers=headers1)
-if (r.status_code == 200):
-    data = r.json()
-    ownerType=data['type']
-if (ownerType=='User'):
-  print('USER')
-else:
-  if (ownerType=='Organization'):
-    print('ORG')
-  else:
-    print('ERROR')
-    exit(1)
 
 
 ########### POST repo
