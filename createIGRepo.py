@@ -13,6 +13,11 @@ headers2 = {'Accept': 'application/vnd.github.baptiste-preview+json'}
 headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 
 
+#####################################################################################################################
+################################   CHANGE THE VARIABLES BELOW, LEAVE THE REST  ######################################
+#####################################################################################################################
+
+
 # Set these variables to true or false, or comment them out for prompting
 #create_project   = False
 #create_repo      = False
@@ -24,17 +29,20 @@ headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 
 
 ## this is the repository that is going to be created
-user = ''
+user = 'costateixeira'
 token = ''  # Add your secret token here
-email = 'hl7belgium@gmail.com'
-owner = ''
-repo = ''
+email = 'mail@openhie.org'
+owner = 'openhie'
+repo = 'case-reporting'
 #ownerType = ''
 
 ## this is the template repository that is going to be cloned
 template_owner = 'openhie'
-template_repo = 'fhir-ig-empty22'
+template_repo = 'empty-fhir-ig'
 
+#####################################################################################################################
+#####################################     Don't change beyond this point    #########################################
+#####################################################################################################################
 
 
 if (user==''):
@@ -102,7 +110,7 @@ else:
   print("Template does not exist: "+template_owner+"/"+template_repo+"\n. Exiting...\n")
   exit(1)
 
-exit(0)
+# exit(0) #for debugging, stop here before actually changing anything
 
 
 
@@ -127,7 +135,7 @@ except:
 try:
   print("Create/update standard .gitignore: "+str(create_gitignore)+"\n")
 except:
-  create_gitignore = (input("Create Project? (Y/N): ").upper() == 'Y')
+  create_gitignore = (input("Create standard .gitignore? (Y/N): ").upper() == 'Y')
   print("Create/update standard .gitignore: "+str(create_gitignore)+"\n")
 
 
