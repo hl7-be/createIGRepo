@@ -313,6 +313,6 @@ if create_workflow:
 
 clone = (input("Create folder "+repo+" in current folder and clone repository? (Y/N): ").upper() == 'Y')
 if clone:
-  os.mkdir("repo")
+  os.mkdir(repo)
   os.system("git clone https://github.com/"+owner+"/"+repo)
 
