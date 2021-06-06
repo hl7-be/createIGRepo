@@ -256,7 +256,7 @@ if (r.status_code == 200):
 
 ########### POST README
 if create_readme:
-    readme = "Empty IG\n---\nThis is an empty IG\n<br> </br>\n###\n### Publication\nThis ImplementationGuide is published in the following locations:\n\nContinuous Build: __http://build.fhir.org/ig/"+owner+"/"+repo+"/branches/main/index.html__  \nCanonical / permanent URL: \n<br> </br>\n\n### Issues\nIssues and change requests are managed here:  \n\nIssues:  __https://github.com/"+owner+"/"+repo+"/issues__  \nKanban board:  __https://github.com/"""+owner+"/"+repo+"/projects/"+str(projectId)+"__  \n\n"
+    readme = "Empty IG\n---\nThis is an empty IG\n<br> </br>\n###\n### Publication\nThis ImplementationGuide is published in the following locations:\n\nContinuous Build: __http://build.fhir.org/ig/"+owner+"/"+repo+"/branches/main/index.html__  \nCanonical / permanent URL: \n<br> </br>\n\n### Issues\nIssues and change requests are managed here:  \n\nIssues:  __https://github.com/"+owner+"/"+repo+"/issues__  \nKanban board:  __https://github.com/"""+owner+"/"+repo+"/projects/1__  \n\n"
     readme_enc = base64.b64encode(readme.encode('utf-8'))
     create_readme_body = {'message': "create readme", 'committer': {'name': owner,'email': email}, "sha": readme_sha, "content": readme_enc.decode('utf-8')}
     r = requests.put(create_file_url+"README.md", data=json.dumps(create_readme_body), headers=headers1, auth=auth)
