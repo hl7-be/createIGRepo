@@ -26,12 +26,13 @@ create_gitignore = True    # if True, a standard .gitignore file will be created
 create_columns   = True    # if True, the kanban columns will be created
 create_hook      = True    # If True, the repository will create (but not activate) the Continuous IG build webhook which will deploy to build.fhir.org upon each commit to the main branch
 hook_active      = False   # If True, the repository will activate the Continuous IG build webhook
-create_workflow  = False   # If True, the repository will include a workflow to deploy the IG using github pipeline and github pages, instead of the build.fhir.org webhook
+create_workflow  = False   # If True, the repository will include a workflow to deploy the IG using github pipeline and github pages, independently of the build.fhir.org webhook
 
 
 ## this is the repository that is going to be created
 user = 'costateixeira' # This script needs github credentials. add your username here
 token = ''  # This script needs github credentials. Add your secret token here
+# To Do: Add the token in an extenal file and .gitignore it
 
 email = 'mail@hl7-be.org' # The email address that will be associated with the repository
 owner = 'hl7-be' # this is the owner or organization where the repository is going to be created
