@@ -20,6 +20,8 @@ headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 # Set these variables to true or false, or comment them out for prompting
 create_project   = True
 create_repo      = True
+repo_private     = True
+create_workflow  = False
 create_readme    = True
 create_gitignore = True
 create_columns   = True
@@ -31,15 +33,15 @@ hook_active      = False
 user = 'costateixeira'
 token = ''  # Add your secret token here
 email = 'mail@hl7-be.org'
-owner = 'costateixeira'
-repo = 'ig_composition'
+owner = 'hl7-be'
+repo = 'testig6'
 #ownerType = ''
 
 ## this is the template repository that is going to be cloned
 template_owner = 'hl7-be'
-template_repo = 'empty-ig'
+template_repo = 'empty-ig-custom'
 
-#####################################################################################################################
+###############################y######################################################################################
 #####################################     Don't change beyond this point    #########################################
 #####################################################################################################################
 
@@ -126,6 +128,12 @@ except:
   print("Create repository: "+str(create_repo)+"\n")
 
 try:
+  print("Private repository: "+str(repo_private)+"\n")
+except:
+  repo_private = (input("Private repository? (Y/N): ").upper() == 'Y')
+  print("Private repository: "+str(repo_private)+"\n")
+
+try:
   print("Create/Update README.md: "+str(create_readme)+"\n")
 except:
   create_readme = (input("Create/Update README.md? (Y/N): ").upper() == 'Y')
@@ -156,6 +164,14 @@ try:
 except:
   hook_active = (input("Activate CI Build hook? (Y/N): ").upper() == 'Y')
   print("Activate CI Build hook: "+str(hook_active)+"\n")
+
+
+
+try:
+  print("Create CI workflow: "+str(create_workflow)+"\n")
+except:
+  create_workflow = (input("Create CI workflow? (Y/N): ").upper() == 'Y')
+  print("Create CI workflow: "+str(create_workflow)+"\n")
 
 
 
