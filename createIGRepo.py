@@ -20,7 +20,7 @@ headers3 = {'Accept': 'application/vnd.github.inertia-preview+json'}
 # Set these variables to true or false, or comment them out for prompting
 create_repo      = True    # whether a repository needs to be created. Pretty much everything wlse will fail if this is not True 
 create_project   = True    # whether a kanban project with issues is to be created.
-repo_private     = True    # True will make the created repository private (note that the gh-pages will not be visible and the CI-build webhook will not work for private repos
+repo_private     = False    # True will make the created repository private (note that the gh-pages will not be visible and the CI-build webhook will not work for private repos
 create_readme    = True    # If True, a simple readme will be created with the relevant URLs filled in
 create_gitignore = True    # if True, a standard .gitignore file will be created. Recommended value: True
 create_columns   = True    # if True, the kanban columns will be created
@@ -310,7 +310,7 @@ if create_workflow:
 
 
 
-clone = (input("Create folder? "+repo+" and clone? (Y/N): ").upper() == 'Y')
+clone = (input("Create folder "+repo+" in current folder and clone repository? (Y/N): ").upper() == 'Y')
 if clone:
   os.mkdir("repo")
   os.system("git clone https://github.com/"+owner+"/"+repo)
