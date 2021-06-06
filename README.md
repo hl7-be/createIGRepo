@@ -15,7 +15,7 @@ create_gitignore = True    # if True, a standard .gitignore file will be created
 create_columns   = True    # if True, the kanban columns will be created
 create_hook      = True    # If True, the repository will create (but not activate) the Continuous IG build webhook which will deploy to build.fhir.org upon each commit to the main branch
 hook_active      = False   # If True, the repository will activate the Continuous IG build webhook
-create_workflow  = False   # If True, the repository will include a workflow to deploy the IG using github pipeline and github pages, instead of the build.fhir.org webhook
+create_workflow  = False   # If True, the repository will include a workflow to deploy the IG using github pipeline and github pages, indepentently of the build.fhir.org webhook
 ```
 
 ## Input parameters (will prompt if not predefined)
