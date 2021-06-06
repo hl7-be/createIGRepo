@@ -24,7 +24,7 @@ user = '' # This script needs github credentials. add your username here
 token = ''  # This script needs github credentials. Add your secret token here
 email = 'mail@hl7-be.org' # The email address that will be associated with the repository
 owner = 'hl7-be' # this is the owner or organization where the repository is going to be created
-repo = 'testig6' # this is the repository that is going to be created
+repo = 'test_ig' # this is the repository that is going to be created
 
 
 
