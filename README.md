@@ -3,6 +3,9 @@
 This script creates a github repository for a FHIR ImplementationGuide. It takes care of all configurations, as long as the user selects (in the code or via a prompt) the options
 
 
+## Authentication
+This script requires you to apply your github password or, and much better - **a github token that you can generate**
+
 ## Options
 this project takes the following options
 
